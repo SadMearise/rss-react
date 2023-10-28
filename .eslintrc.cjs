@@ -19,6 +19,7 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint", "react", "react-hooks", "react-refresh"],
   rules: {
+    "no-console": "off",
     "import/extensions": "off",
     "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
     "react-hooks/rules-of-hooks": "error",
