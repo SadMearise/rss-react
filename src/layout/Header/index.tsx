@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Container from "../../components/Container";
-import styles from "./Header.module.scss";
+import styles from "./header.module.scss";
 import Search from "../../components/Search";
 import TriggerErrorButton from "../../components/TriggerErrorButton";
 

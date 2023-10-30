@@ -1,5 +1,5 @@
 import { ReactNode, Component } from "react";
-import styles from "./Container.module.scss";
+import styles from "./container.module.scss";
 
 type TProps = {
   children: ReactNode;

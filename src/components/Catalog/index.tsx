@@ -12,6 +12,7 @@ type TProps = {
 type TState = {
   locations: ILocation[] | undefined;
   page: number;
+  isLoading: boolean;
 };
 
 class Catalog extends Component<TProps, TState> {
@@ -21,42 +22,54 @@ class Catalog extends Component<TProps, TState> {
     this.state = {
       locations: [],
       page: 1,
+      isLoading: false,
     };
   }
 
   componentDidMount(): void {
     this.updateLocations();
+    console.log("componentDidMount");
+    this.setState({ page: 2 });
   }
 
-  componentDidUpdate(): void {
-    this.updateLocations();
+  componentDidUpdate(prevProps: TProps): void {
+    const { searchInput } = this.props;
+
+    if (prevProps.searchInput !== searchInput.toString()) {
+      this.updateLocations();
+    }
   }
 
   async updateLocations(): Promise<void> {
+    this.setState({ isLoading: true });
     const { page } = this.state;
     const { searchInput } = this.props;
 
     const locations = await fetchData(page, searchInput);
 
-    this.setState({ locations: locations?.results });
+    this.setState({ locations: locations?.results, isLoading: false });
   }
 
   render() {
-    const { locations } = this.state;
+    const { locations, isLoading } = this.state;
 
     return (
       <section className={styles.section}>
         <Container>
-          <div className={styles.items}>
-            {locations &&
-              locations.length &&
-              locations.map((location) => (
-                <CatalogItem
-                  key={location.id}
-                  location={location}
-                />
-              ))}
-          </div>
+          {isLoading ? (
+            <h2>Loading...</h2>
+          ) : (
+            <div className={styles.items}>
+              {locations &&
+                locations.length &&
+                locations.map((location) => (
+                  <CatalogItem
+                    key={location.id}
+                    location={location}
+                  />
+                ))}
+            </div>
+          )}
         </Container>
       </section>
     );
