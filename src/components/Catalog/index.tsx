@@ -28,8 +28,6 @@ class Catalog extends Component<TProps, TState> {
 
   componentDidMount(): void {
     this.updateLocations();
-    console.log("componentDidMount");
-    this.setState({ page: 2 });
   }
 
   componentDidUpdate(prevProps: TProps): void {
