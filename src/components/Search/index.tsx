@@ -3,7 +3,7 @@ import styles from "./Search.module.scss";
 
 type TProps = {
   searchInput: string;
-  updateSearchInput: (value: string) => void;
+  updateSearchInput: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const Search: FC<TProps> = ({ searchInput, updateSearchInput }) => {
