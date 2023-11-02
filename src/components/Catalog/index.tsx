@@ -1,77 +1,52 @@
-import { Component } from "react";
+import { FC, useState, useEffect, useCallback } from "react";
 import Container from "../Container";
 import fetchData from "../../services/fetchLocations.service";
-import { ILocation } from "../../models/interfaces";
 import CatalogItem from "../CatalogItem";
 import styles from "./Catalog.module.scss";
+import { ILocation } from "../../models/interfaces";
 
 type TProps = {
   searchInput: string;
 };
 
-type TState = {
-  locations: ILocation[] | undefined;
-  page: number;
-  isLoading: boolean;
-};
+const Catalog: FC<TProps> = ({ searchInput }) => {
+  const [locations, setLocations] = useState<ILocation[] | undefined>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const page = 1;
 
-class Catalog extends Component<TProps, TState> {
-  constructor(props: TProps) {
-    super(props);
-
-    this.state = {
-      locations: [],
-      page: 1,
-      isLoading: false,
-    };
-  }
-
-  componentDidMount(): void {
-    this.updateLocations();
-  }
-
-  componentDidUpdate(prevProps: TProps): void {
-    const { searchInput } = this.props;
-
-    if (prevProps.searchInput !== searchInput.toString()) {
-      this.updateLocations();
-    }
-  }
-
-  async updateLocations(): Promise<void> {
-    this.setState({ isLoading: true });
-    const { page } = this.state;
-    const { searchInput } = this.props;
+  const updateLocations: () => Promise<void> = useCallback(async () => {
+    setIsLoading(true);
 
     const locations = await fetchData(page, searchInput);
 
-    this.setState({ locations: locations?.results, isLoading: false });
-  }
+    setIsLoading(false);
+    setLocations(locations?.results);
+  }, [searchInput]);
 
-  render() {
-    const { locations, isLoading } = this.state;
+  useEffect(() => {
+    updateLocations();
+  }, [updateLocations]);
 
-    return (
-      <section className={styles.section}>
-        <Container>
-          {isLoading ? (
-            <h2>Loading...</h2>
-          ) : (
-            <div className={styles.items}>
-              {locations &&
-                locations.length &&
-                locations.map((location) => (
-                  <CatalogItem
-                    key={location.id}
-                    location={location}
-                  />
-                ))}
-            </div>
-          )}
-        </Container>
-      </section>
-    );
-  }
-}
+  return (
+    <section className={styles.section}>
+      <Container>
+        {isLoading ? (
+          <h2>Loading...</h2>
+        ) : (
+          <div className={styles.items}>
+            {locations &&
+              locations.length &&
+              locations.map((location) => (
+                <CatalogItem
+                  key={location.id}
+                  location={location}
+                />
+              ))}
+          </div>
+        )}
+      </Container>
+    </section>
+  );
+};
 
 export default Catalog;

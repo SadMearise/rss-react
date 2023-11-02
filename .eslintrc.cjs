@@ -50,6 +50,13 @@ module.exports = {
         code: 120,
       },
     ],
+    "react/function-component-definition": [2, { namedComponents: "arrow-function" }],
+    "object-curly-newline": [
+      "error",
+      {
+        ExportDeclaration: { multiline: true },
+      },
+    ],
   },
   settings: {
     react: {

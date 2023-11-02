@@ -1,16 +1,10 @@
-import { ReactNode, Component } from "react";
-import styles from "./container.module.scss";
+import { FC, PropsWithChildren } from "react";
+import styles from "./Container.module.scss";
 
-type TProps = {
-  children: ReactNode;
+const Container: FC<PropsWithChildren> = (props) => {
+  const { children } = props;
+
+  return <div className={styles.container}>{children}</div>;
 };
-
-class Container extends Component<TProps> {
-  render() {
-    const { children } = this.props;
-
-    return <div className={styles.container}>{children}</div>;
-  }
-}
 
 export default Container;
