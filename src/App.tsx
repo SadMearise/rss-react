@@ -1,7 +1,8 @@
 import { FC } from "react";
 import "./App.module.scss";
-import HomePage from "./pages/Home";
+import { RouterProvider } from "react-router-dom";
+import router from "./router/router";
 
-const App: FC = () => <HomePage />;
+const App: FC = () => <RouterProvider router={router} />;
 
 export default App;
