@@ -1,16 +1,23 @@
 import React, { FC } from "react";
+import { SetURLSearchParams } from "react-router-dom";
 import styles from "./Limit.module.scss";
 
 type TProps = {
   limit: number;
   updateLimit: React.Dispatch<React.SetStateAction<number>>;
+  updateSearchParams: SetURLSearchParams;
+  updatePage: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const Limit: FC<TProps> = ({ limit, updateLimit }) => {
+const Limit: FC<TProps> = ({ limit, updateLimit, updateSearchParams, updatePage }) => {
   const select: React.RefObject<HTMLSelectElement> = React.createRef();
   const steps = [10, 20, 30, 40, 50];
 
-  const handleSelect = () => updateLimit(Number(select.current?.value));
+  const handleSelect = () => {
+    updateLimit(Number(select.current?.value));
+    updateSearchParams({ page: String(1) });
+    updatePage(1);
+  };
 
   return (
     <div className={styles.limit}>

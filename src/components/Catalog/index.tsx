@@ -17,31 +17,48 @@ const Catalog: FC<TProps> = ({ searchInput }) => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [countPages, setCountPages] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
   const [limit, setLimit] = useState(20);
   const [searchParams, setSearchParams] = useSearchParams();
-  const pageQuery = searchParams.get("page") || "";
-  const [page, setPage] = useState(Number(pageQuery) || 1);
+  const [page, setPage] = useState(Number(searchParams.get("page") || "") || 1);
 
   const updateData: () => Promise<void> = useCallback(async () => {
     setIsLoading(true);
 
-    const skip = (pageQuery && getSkip(limit, pageQuery)) || getSkip(limit, page);
+    const skip = (page && getSkip(limit, page)) || getSkip(limit, page);
     const results = await fetchProducts(skip, limit, searchInput);
 
     if (results) {
       const { products, total } = results;
-
       setProducts(products);
 
+      setTotalItems(total);
       setCountPages(getCountPages(total, limit));
+    } else {
+      setTotalItems(0);
     }
 
     setIsLoading(false);
-  }, [limit, searchInput, pageQuery, page]);
+  }, [limit, searchInput, page]);
 
   useEffect(() => {
     updateData();
   }, [updateData]);
+
+  const pagination = () => {
+    if (totalItems > limit) {
+      return (
+        <Pagination
+          page={page}
+          updatePage={setPage}
+          updateSearchParams={setSearchParams}
+          countPages={countPages}
+        />
+      );
+    }
+
+    return "";
+  };
 
   const catalogItems = () => {
     if (countPages === 0) {
@@ -53,6 +70,8 @@ const Catalog: FC<TProps> = ({ searchInput }) => {
         <Limit
           limit={limit}
           updateLimit={setLimit}
+          updateSearchParams={setSearchParams}
+          updatePage={setPage}
         />
         <div className={styles.items}>
           {products &&
@@ -64,12 +83,7 @@ const Catalog: FC<TProps> = ({ searchInput }) => {
               />
             ))}
         </div>
-        <Pagination
-          page={page}
-          updatePage={setPage}
-          updateSearchParams={setSearchParams}
-          countPages={countPages}
-        />
+        {pagination()}
       </>
     );
   };
