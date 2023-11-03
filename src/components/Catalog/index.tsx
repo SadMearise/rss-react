@@ -1,47 +1,47 @@
 import { FC, useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import Container from "../Container";
-import fetchData from "../../services/fetchLocations.service";
+import fetchProducts from "../../services/fetchProducts.service";
 import CatalogItem from "../CatalogItem";
 import styles from "./Catalog.module.scss";
-import { ILocation } from "../../models/interfaces";
 import Pagination from "../Pagination";
+import { IProduct } from "../../models/interfaces";
+import Limit from "../Limit";
+import { getCountPages, getSkip } from "../../utils/helpers";
 
 type TProps = {
   searchInput: string;
 };
 
 const Catalog: FC<TProps> = ({ searchInput }) => {
-  const [locations, setLocations] = useState<ILocation[]>([]);
+  const [products, setProducts] = useState<IProduct[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [countPages, setCountPages] = useState(0);
+  const [limit, setLimit] = useState(20);
   const [searchParams, setSearchParams] = useSearchParams();
   const pageQuery = searchParams.get("page") || "";
   const [page, setPage] = useState(Number(pageQuery) || 1);
 
-  const updateLocations: () => Promise<void> = useCallback(async () => {
+  const updateData: () => Promise<void> = useCallback(async () => {
     setIsLoading(true);
 
-    const locations = await fetchData(pageQuery || String(page), searchInput);
+    const skip = (pageQuery && getSkip(limit, pageQuery)) || getSkip(limit, page);
+    const results = await fetchProducts(skip, limit, searchInput);
 
-    if (locations) {
-      const { results, info } = locations;
+    if (results) {
+      const { products, total } = results;
 
-      setLocations(results);
+      setProducts(products);
 
-      if (info) {
-        setCountPages(info.pages);
-      } else {
-        setCountPages(0);
-      }
+      setCountPages(getCountPages(total, limit));
     }
 
     setIsLoading(false);
-  }, [pageQuery, page, searchInput]);
+  }, [limit, searchInput, pageQuery, page]);
 
   useEffect(() => {
-    updateLocations();
-  }, [updateLocations]);
+    updateData();
+  }, [updateData]);
 
   const catalogItems = () => {
     if (countPages === 0) {
@@ -50,13 +50,17 @@ const Catalog: FC<TProps> = ({ searchInput }) => {
 
     return (
       <>
+        <Limit
+          limit={limit}
+          updateLimit={setLimit}
+        />
         <div className={styles.items}>
-          {locations &&
-            locations.length &&
-            locations.map((location) => (
+          {products &&
+            products.length &&
+            products.map((product) => (
               <CatalogItem
-                key={location.id}
-                location={location}
+                key={product.id}
+                product={product}
               />
             ))}
         </div>

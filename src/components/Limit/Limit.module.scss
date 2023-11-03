@@ -1,0 +1,12 @@
+.limit {
+  display: inline-block;
+  margin-bottom: 15px;
+
+  &__title {
+    margin-bottom: 5px; 
+  }
+
+  &__options {
+    width: 100%;
+  }
+}

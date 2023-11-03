@@ -1,19 +1,20 @@
-export interface ILocation {
+export interface IProduct {
+  brand: string;
+  category: string;
+  description: string;
+  discountPercentage: number;
   id: number;
-  name: string;
-  type: string;
-  dimension: string;
-  residents: string[];
-  url: string;
-  created: string;
+  images: string[];
+  price: number;
+  rating: number;
+  stock: number;
+  thumbnail: string;
+  title: string;
 }
 
-export interface IInfo {
-  info: {
-    count: number;
-    pages: number;
-    next: string | null;
-    prev: string | null;
-  };
-  results: ILocation[];
+export interface IProductHeaders {
+  limit: number;
+  skip: number;
+  total: number;
+  products: IProduct[];
 }

@@ -1,23 +1,23 @@
 import { FC } from "react";
 import classNames from "classnames";
-import { ILocation } from "../../models/interfaces";
 import styles from "./CatalogItem.module.scss";
+import { IProduct } from "../../models/interfaces";
 
 type TProps = {
-  location: ILocation;
+  product: IProduct;
 };
 
-const CatalogItem: FC<TProps> = ({ location }) => (
+const CatalogItem: FC<TProps> = ({ product }) => (
   <div className={styles.item}>
     <div className={styles.item__wrapper}>
-      <span className={classNames(styles.item__text, styles.item__text_title)}>{location.name}</span>
+      <span className={classNames(styles.item__text, styles.item__text_title)}>{product.title}</span>
       <span className={styles.item__text}>
-        Dimension:&nbsp;
-        {location.dimension}
+        Description:&nbsp;
+        {product.description}
       </span>
       <span className={styles.item__text}>
-        Type:&nbsp;
-        {location.type}
+        Price:&nbsp;
+        {product.price}
       </span>
     </div>
   </div>
