@@ -18,7 +18,6 @@ const fetchProducts = async (
     if (!searchQuery) {
       params = `?${params}`;
     }
-    console.log(`${BASE_URL}/${searchQuery}${params}`);
     const response: Response = await fetch(`${BASE_URL}/${searchQuery}${params}`, {
       method: HTTPMethods.get,
     });

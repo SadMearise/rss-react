@@ -1,5 +1,5 @@
-import { FC, useState, useEffect, useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
+import React, { FC, useState, useEffect, useCallback } from "react";
+import { SetURLSearchParams } from "react-router-dom";
 import Container from "../Container";
 import fetchProducts from "../../services/fetchProducts.service";
 import CatalogItem from "../CatalogItem";
@@ -11,16 +11,17 @@ import { getCountPages, getSkip } from "../../utils/helpers";
 
 type TProps = {
   searchInput: string;
+  updateSearchParams: SetURLSearchParams;
+  page: number;
+  updatePage: (value: React.SetStateAction<number>) => void;
 };
 
-const Catalog: FC<TProps> = ({ searchInput }) => {
+const Catalog: FC<TProps> = ({ searchInput, updateSearchParams, page, updatePage }) => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [countPages, setCountPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
   const [limit, setLimit] = useState(20);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [page, setPage] = useState(Number(searchParams.get("page") || "") || 1);
 
   const updateData: () => Promise<void> = useCallback(async () => {
     setIsLoading(true);
@@ -50,8 +51,8 @@ const Catalog: FC<TProps> = ({ searchInput }) => {
       return (
         <Pagination
           page={page}
-          updatePage={setPage}
-          updateSearchParams={setSearchParams}
+          updatePage={updatePage}
+          updateSearchParams={updateSearchParams}
           countPages={countPages}
         />
       );
@@ -70,8 +71,8 @@ const Catalog: FC<TProps> = ({ searchInput }) => {
         <Limit
           limit={limit}
           updateLimit={setLimit}
-          updateSearchParams={setSearchParams}
-          updatePage={setPage}
+          updateSearchParams={updateSearchParams}
+          updatePage={updatePage}
         />
         <div className={styles.items}>
           {products &&

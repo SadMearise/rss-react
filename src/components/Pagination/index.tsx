@@ -4,7 +4,7 @@ import styles from "./Pagination.module.scss";
 
 type TProps = {
   page: number;
-  updatePage: React.Dispatch<React.SetStateAction<number>>;
+  updatePage: (value: React.SetStateAction<number>) => void;
   updateSearchParams: SetURLSearchParams;
   countPages: number;
 };
