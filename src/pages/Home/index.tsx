@@ -1,29 +1,23 @@
-import { Component } from "react";
+import { FC, useState } from "react";
 import Header from "../../layout/Header";
 import Catalog from "../../components/Catalog";
 
-class HomePage extends Component {
-  state = {
-    searchInput: localStorage.getItem("searchInput") || "",
+const HomePage: FC = () => {
+  const [searchInput, setSearchInput] = useState(localStorage.getItem("searchInput") || "");
+
+  const updateSearchInput = (value: string) => {
+    setSearchInput(value);
   };
 
-  updateSearchInput = (value: string) => {
-    this.setState({ searchInput: value });
-  };
-
-  render() {
-    const { searchInput } = this.state;
-
-    return (
-      <>
-        <Header
-          searchInput={searchInput}
-          updateSearchInput={this.updateSearchInput}
-        />
-        <Catalog searchInput={searchInput} />
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Header
+        searchInput={searchInput}
+        updateSearchInput={updateSearchInput}
+      />
+      <Catalog searchInput={searchInput} />
+    </>
+  );
+};
 
 export default HomePage;
