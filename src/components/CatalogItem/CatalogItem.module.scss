@@ -2,8 +2,21 @@
   flex: 0 0 25%;
   min-height: 160px;
 
+  @media (max-width: 992px) {
+    flex: 0 0 33.333%;
+  }
+
+  @media (max-width: 768px) {
+    flex: 0 0 50%;
+  }
+
+  @media (max-width: 480px) {
+    flex: 0 0 100%;
+    min-height: 100px;
+  }
+
   &__wrapper {
-    padding: 30px;
+    padding: 0px 30px 30px;
   }
 
   &__text {
