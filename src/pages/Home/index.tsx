@@ -29,6 +29,7 @@ const HomePage: FC = () => {
         updateSearchParams={setSearchParams}
         page={page}
         updatePage={updatePage}
+        searchParams={searchParams}
       />
     </>
   );

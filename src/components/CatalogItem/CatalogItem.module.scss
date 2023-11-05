@@ -16,7 +16,13 @@
   }
 
   &__wrapper {
-    padding: 0px 30px 30px;
+    padding: 0px 20px 20px;
+  }
+  
+  &__body-button {
+    text-align: left;
+    border: 0;
+    color: #837066;
   }
 
   &__text {
@@ -28,5 +34,13 @@
       margin-bottom: 10px;
       font-weight: bold;
     }
+  }
+
+  &__link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 }

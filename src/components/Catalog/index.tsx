@@ -8,20 +8,35 @@ import Pagination from "../Pagination";
 import { IProduct } from "../../models/interfaces";
 import Limit from "../Limit";
 import { getCountPages, getSkip } from "../../utils/helpers";
+import Details from "../Details";
+import fetchProductById from "../../services/fetchProductById";
 
 type TProps = {
   searchInput: string;
   updateSearchParams: SetURLSearchParams;
   page: number;
   updatePage: (value: React.SetStateAction<number>) => void;
+  searchParams: URLSearchParams;
 };
 
-const Catalog: FC<TProps> = ({ searchInput, updateSearchParams, page, updatePage }) => {
+const Catalog: FC<TProps> = ({ searchInput, updateSearchParams, page, updatePage, searchParams }) => {
+  const [id, setId] = useState(Number(searchParams.get("details")));
+  const [product, setProduct] = useState<IProduct | null>(null);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [countPages, setCountPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
   const [limit, setLimit] = useState(20);
+
+  const updateProduct: (product: IProduct | null) => void = (product) => {
+    if (product) {
+      setProduct(product);
+    }
+  };
+  const updateDetailsLoading = (value: boolean) => {
+    setIsLoadingDetails(value);
+  };
 
   const updateData: () => Promise<void> = useCallback(async () => {
     setIsLoading(true);
@@ -46,7 +61,17 @@ const Catalog: FC<TProps> = ({ searchInput, updateSearchParams, page, updatePage
     updateData();
   }, [updateData]);
 
-  const pagination = () => {
+  useEffect(() => {
+    const getProduct = async () => {
+      const fetchProduct = await fetchProductById(id);
+
+      setProduct(fetchProduct);
+    };
+    console.log("sd");
+    getProduct();
+  }, []);
+
+  const isPagination = () => {
     if (totalItems > limit) {
       return (
         <Pagination
@@ -61,9 +86,9 @@ const Catalog: FC<TProps> = ({ searchInput, updateSearchParams, page, updatePage
     return "";
   };
 
-  const catalogItems = () => {
+  const isCatalogItems = () => {
     if (countPages === 0) {
-      return <h2>Content not found</h2>;
+      return <div>Content not found</div>;
     }
 
     return (
@@ -79,20 +104,36 @@ const Catalog: FC<TProps> = ({ searchInput, updateSearchParams, page, updatePage
             products.length &&
             products.map((product) => (
               <CatalogItem
+                updateSearchParams={updateSearchParams}
+                page={page}
+                updateId={setId}
                 key={product.id}
                 product={product}
+                updateProduct={updateProduct}
+                updateDetailsLoading={updateDetailsLoading}
               />
             ))}
         </div>
-        {pagination()}
+        {isPagination()}
       </>
     );
   };
 
   return (
-    <section className={styles.section}>
-      <Container>{isLoading ? <h2>Loading...</h2> : catalogItems()}</Container>
-    </section>
+    <main>
+      <section className={styles.section}>
+        <Container>{isLoading ? <div>Loading...</div> : isCatalogItems()}</Container>
+      </section>
+      {!!id && !!products.length && (
+        <Details
+          updateSearchParams={updateSearchParams}
+          page={page}
+          product={product}
+          updateId={setId}
+          isLoading={isLoadingDetails}
+        />
+      )}
+    </main>
   );
 };
 
