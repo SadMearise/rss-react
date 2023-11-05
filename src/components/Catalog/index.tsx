@@ -67,9 +67,9 @@ const Catalog: FC<TProps> = ({ searchInput, updateSearchParams, page, updatePage
 
       setProduct(fetchProduct);
     };
-    console.log("sd");
+
     getProduct();
-  }, []);
+  }, [id]);
 
   const isPagination = () => {
     if (totalItems > limit) {
